@@ -45,7 +45,7 @@ class _RecipeListState extends State<RecipeList> {
   void _filterRecipes(String query) {
     setState(() {
       _searchQuery = query;
-      _filteredRecipes = _recipes.where((recipe) => recipe.title.toLowerCase().contains(query.toLowerCase())).toList();
+      _filteredRecipes = _recipes.where((recipe) => recipe.strMeal.toLowerCase().contains(query.toLowerCase())).toList();
     });
   }
 

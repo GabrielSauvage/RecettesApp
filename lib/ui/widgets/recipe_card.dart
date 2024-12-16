@@ -11,12 +11,12 @@ class RecipeCard extends StatelessWidget {
     return Card(
       child: ListTile(
         leading: Image.network(
-          recipe.imageUrl,
+          recipe.strMealThumb,
           width: 50,
           height: 50,
           fit: BoxFit.cover,
         ),
-        title: Text(recipe.title),
+        title: Text(recipe.strMeal),
         onTap: () {
           // Action to perform when a recipe is tapped
         },
