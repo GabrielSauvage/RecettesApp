@@ -13,7 +13,7 @@ class Favorites extends StatelessWidget {
       body: const Center(
         child: Text('Liste des recettes favorites'),
       ),
-      bottomNavigationBar: const BottomNavBar(),
+      bottomNavigationBar: const BottomNavBar(selectedIndex: 1),
     );
   }
 }

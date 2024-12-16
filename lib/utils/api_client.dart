@@ -4,11 +4,11 @@ import '../models/category.dart';
 import '../models/recipe.dart';
 
 class ApiClient {
-  final String baseUrl = 'https://publicdomainrecipes.com'; // URL de base
+  final String baseUrl = 'https://publicdomainrecipes.com';
 
   // Méthode pour récupérer toutes les catégories
   Future<List<Category>> fetchCategories() async {
-    final response = await http.get(Uri.parse('$baseUrl/categories.json')); // Exemple de JSON avec les catégories
+    final response = await http.get(Uri.parse('$baseUrl/categories.json'));
 
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
@@ -20,7 +20,7 @@ class ApiClient {
 
   // Méthode pour récupérer les recettes d'une catégorie
   Future<List<Recipe>> fetchRecipesByCategory(String categoryId) async {
-    final response = await http.get(Uri.parse('$baseUrl/category/$categoryId.json')); // Exemple de JSON pour une catégorie spécifique
+    final response = await http.get(Uri.parse('$baseUrl/category/$categoryId.json'));
 
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);

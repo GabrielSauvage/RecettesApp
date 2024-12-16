@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../widgets/bottom_nav_bar.dart';
 import 'recipe_list.dart';
 
@@ -14,17 +15,12 @@ class Home extends StatelessWidget {
       body: Center(
         child: ElevatedButton(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const RecipeList(categoryId: 'indian'),
-              ),
-            );
+            context.go('/recipes/indian');
           },
           child: const Text('Voir les recettes indiennes'),
         ),
       ),
-      bottomNavigationBar: const BottomNavBar(),
+      bottomNavigationBar: const BottomNavBar(selectedIndex: 0),
     );
   }
 }
