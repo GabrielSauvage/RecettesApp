@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../models/category.dart';
 import '../../utils/api_client.dart';
 import '../widgets/category_card.dart';
+import 'package:go_router/go_router.dart';
 import '../widgets/bottom_nav_bar.dart';
 import 'package:http/http.dart' as http;
 
@@ -51,7 +52,7 @@ class _HomeState extends State<Home> {
           }
         },
       ),
-      bottomNavigationBar: const BottomNavBar(),
+      bottomNavigationBar: const BottomNavBar(selectedIndex: 0),
     );
   }
 }

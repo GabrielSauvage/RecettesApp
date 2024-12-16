@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import './ui/screens/home.dart';
-import './theme.dart';
+import 'package:go_router/go_router.dart';
+import 'router.dart';
+import 'theme.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,10 +12,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    final GoRouter _router = createRouter();
+
+    return MaterialApp.router(
+      routerConfig: _router,
       title: 'Paradis des recettes',
       theme: appTheme,
-      home: Home(),
     );
   }
 }
