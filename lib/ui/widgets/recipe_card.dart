@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../models/recipe.dart';
+import 'package:go_router/go_router.dart';
 
 class RecipeCard extends StatelessWidget {
   final Recipe recipe;
@@ -18,7 +19,7 @@ class RecipeCard extends StatelessWidget {
         ),
         title: Text(recipe.strMeal),
         onTap: () {
-          // Action to perform when a recipe is tapped
+          context.go('/recipe/${recipe.idMeal}');
         },
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tp/ui/screens/recipe_detail.dart';
 import 'ui/screens/home.dart';
 import 'ui/screens/recipe_list.dart';
 import 'ui/screens/favorites.dart';
@@ -50,6 +51,24 @@ GoRouter createRouter() {
           return CustomTransitionPage(
             key: state.pageKey,
             child: RecipeList(categoryId: categoryId),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return _buildSlideTransition(
+                context: context,
+                child: child,
+                animation: animation,
+                secondaryAnimation: secondaryAnimation,
+              );
+            },
+          );
+        },
+      ),
+      GoRoute(
+        path: '/recipe/:idMeal',
+        pageBuilder: (context, state) {
+          final idMeal = state.params['idMeal']!;
+          return CustomTransitionPage(
+            key: state.pageKey,
+            child: RecipeDetail(idMeal: idMeal),
             transitionsBuilder: (context, animation, secondaryAnimation, child) {
               return _buildSlideTransition(
                 context: context,
