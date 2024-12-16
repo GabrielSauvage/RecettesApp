@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Paradis des recettes',
       theme: appTheme,
-      home: const Home(),
+      home: Home(),
     );
   }
 }

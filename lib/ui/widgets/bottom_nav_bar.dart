@@ -22,7 +22,7 @@ class BottomNavBar extends StatelessWidget {
         if (index == 0) {
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => const Home()),
+            MaterialPageRoute(builder: (context) => Home()),
                 (route) => false,
           );
         } else if (index == 1) {

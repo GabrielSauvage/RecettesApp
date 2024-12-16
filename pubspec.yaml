@@ -11,10 +11,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  http: ^1.2.2
+  http: ^0.13.3
   cupertino_icons: ^1.0.8
   flutter_bloc: ^8.1.6
   shared_preferences: ^2.0.13
+  html: ^0.15.0
 
 dev_dependencies:
   flutter_test:
