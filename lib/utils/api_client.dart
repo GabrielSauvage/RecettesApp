@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/category.dart';
+import '../models/country.dart';
 import '../models/recipe.dart';
 
 class ApiClient {
@@ -16,6 +17,19 @@ class ApiClient {
       return categories.map((category) => Category.fromJson(category)).toList();
     } else {
       throw Exception("Erreur lors du chargement des catégories");
+    }
+  }
+
+  Future<List<Country>> fetchCountries() async {
+    final response = await http.get(Uri.parse('${_baseUrl}list.php?a=list'));
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      final countries = data['meals'] as List<dynamic>;
+
+      return countries.map((country) => Country.fromJson(country)).toList();
+    } else {
+      throw Exception("Erreur lors du chargement des pays");
     }
   }
 
