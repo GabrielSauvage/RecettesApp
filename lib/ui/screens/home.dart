@@ -38,14 +38,14 @@ class _HomeState extends State<Home> {
         title: const Text('Recipes paradise'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 16.0),
             TextField(
               decoration: InputDecoration(
-                hintText: 'Rechercher...',
+                hintText: 'Search...',
                 prefixIcon: Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
@@ -73,7 +73,7 @@ class _HomeState extends State<Home> {
                         : theme.colorScheme.secondary,
                   ),
                   child: Text(
-                    'Catégories',
+                    'Categories',
                     style: TextStyle(
                       color: showCategories
                           ? theme.colorScheme.onPrimary
@@ -94,7 +94,7 @@ class _HomeState extends State<Home> {
                         : theme.colorScheme.secondary,
                   ),
                   child: Text(
-                    'Pays',
+                    'Countries',
                     style: TextStyle(
                       color: !showCategories
                           ? theme.colorScheme.onPrimary
