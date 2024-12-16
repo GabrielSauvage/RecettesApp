@@ -52,6 +52,7 @@ class _RecipeListState extends State<RecipeList> {
         title: Text('${widget.categoryId} recipes'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
+          color: ColorScheme.fromSeed(seedColor: const Color(0xFFDDBFA9)).primary,
           onPressed: () {
             context.go('/', extra: {'reverse': true});
           },
@@ -75,13 +76,13 @@ class _RecipeListState extends State<RecipeList> {
             child: ListView.builder(
               itemCount: _filteredRecipes.length,
               itemBuilder: (context, index) {
-                return RecipeCard(recipe: _filteredRecipes[index]);
+                return RecipeCard(recipe: _filteredRecipes[index], categoryId: widget.categoryId);
               },
             ),
           ),
         ],
       ),
-      bottomNavigationBar: const BottomNavBar(selectedIndex: 2),
+      bottomNavigationBar: const BottomNavBar(selectedIndex: -1),
     );
   }
 }
