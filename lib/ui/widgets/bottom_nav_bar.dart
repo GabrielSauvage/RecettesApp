@@ -27,11 +27,11 @@ class _BottomNavBarState extends State<BottomNavBar> {
       items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
-          label: 'Accueil',
+          label: 'Home',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.favorite),
-          label: 'Favoris',
+          label: 'Favorites',
         ),
       ],
       currentIndex: currentIndex == -1 ? 0 : currentIndex,

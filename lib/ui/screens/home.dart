@@ -27,7 +27,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Paradis des recettes'),
+        title: const Text('Recipes paradise'),
       ),
       body: FutureBuilder<List<Category>>(
         future: futureCategories,
@@ -46,7 +46,13 @@ class _HomeState extends State<Home> {
               ),
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
-                return CategoryCard(category: snapshot.data![index]);
+                final category = snapshot.data![index];
+                return GestureDetector(
+                  onTap: () {
+                    context.go('/recipes/${category.strCategory}');
+                  },
+                  child: CategoryCard(category: category),
+                );
               },
             );
           }

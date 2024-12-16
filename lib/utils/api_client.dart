@@ -19,6 +19,18 @@ class ApiClient {
     }
   }
 
+  Future<List<Recipe>> fetchRecipesByCategory(String category) async {
+    final response = await http.get(Uri.parse('${_baseUrl}filter.php?c=$category'));
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      final meals = data['meals'] as List<dynamic>;
+
+      return meals.map((meal) => Recipe.fromJson(meal)).toList();
+    } else {
+      throw Exception("Erreur lors du chargement des recettes");
+    }
+  }
 
   // Recherche par ingrédient
   static Future<List<Recipe>> searchByIngredient(String ingredient) async {

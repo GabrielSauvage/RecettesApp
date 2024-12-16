@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../../utils/api_client.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/recipe_card.dart';
 import '../../models/recipe.dart';
@@ -28,18 +29,13 @@ class _RecipeListState extends State<RecipeList> {
   }
 
   Future<void> _fetchRecipes() async {
-    final response = await http.get(Uri.parse('https://www.themealdb.com/api/json/v1/1/filter.php?c=${widget.categoryId}'));
-
-    if (response.statusCode == 200) {
-      List<dynamic> data = json.decode(response.body)['meals'];
-      setState(() {
-        _recipes = data.map((item) => Recipe.fromJson(item)).toList();
-        _filteredRecipes = _recipes;
-        _isLoading = false;
-      });
-    } else {
-      throw Exception('Failed to load recipes');
-    }
+    final apiClient = ApiClient();
+    final recipes = await apiClient.fetchRecipesByCategory(widget.categoryId);
+    setState(() {
+      _recipes = recipes;
+      _filteredRecipes = _recipes;
+      _isLoading = false;
+    });
   }
 
   void _filterRecipes(String query) {
@@ -53,7 +49,7 @@ class _RecipeListState extends State<RecipeList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Recettes de ${widget.categoryId}'),
+        title: Text('${widget.categoryId} recipes'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -69,7 +65,7 @@ class _RecipeListState extends State<RecipeList> {
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               decoration: const InputDecoration(
-                labelText: 'Rechercher',
+                labelText: 'Search',
                 border: OutlineInputBorder(),
               ),
               onChanged: _filterRecipes,

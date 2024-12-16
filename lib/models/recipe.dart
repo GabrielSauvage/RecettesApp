@@ -30,12 +30,12 @@ class Recipe {
     }
 
     return Recipe(
-      idMeal: json['idMeal'],
-      strMeal: json['strMeal'],
-      strCategory: json['strCategory'],
-      strArea: json['strArea'],
-      strInstructions: json['strInstructions'],
-      strMealThumb: json['strMealThumb'],
+      idMeal: json['idMeal'] ?? '',
+      strMeal: json['strMeal'] ?? '',
+      strCategory: json['strCategory'] ?? '',
+      strArea: json['strArea'] ?? '',
+      strInstructions: json['strInstructions'] ?? '',
+      strMealThumb: json['strMealThumb'] ?? '',
       ingredients: ingredients,
     );
   }
