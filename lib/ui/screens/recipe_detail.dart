@@ -14,7 +14,7 @@ class RecipeDetail extends StatelessWidget {
       appBar: AppBar(
         title: Text("Détails de la recette"),
       ),
-      body: FutureBuilder<Meal>(
+      body: FutureBuilder<Recipe>(
         future: ApiClient.getMealDetails(idMeal),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
