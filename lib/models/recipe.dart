@@ -1,28 +1,28 @@
 class Recipe {
-  final String label; // Nom de la recette
-  final String image; // URL de l'image
+  final String id;
+  final String title;
+  final String category;
   final List<String> ingredients;
-  final double calories;
-  final List<String> healthLabels;
-  final List<String> dietLabels;
+  final String instructions;
+  final String url;
 
   Recipe({
-    required this.label,
-    required this.image,
+    required this.id,
+    required this.title,
+    required this.category,
     required this.ingredients,
-    required this.calories,
-    required this.healthLabels,
-    required this.dietLabels,
+    required this.instructions,
+    required this.url,
   });
 
   factory Recipe.fromJson(Map<String, dynamic> json) {
     return Recipe(
-      label: json['label'] as String,
-      image: json['image'] as String,
-      ingredients: (json['ingredientLines'] as List).map((e) => e as String).toList(),
-      calories: json['calories'] as double,
-      healthLabels: (json['healthLabels'] as List).map((e) => e as String).toList(),
-      dietLabels: (json['dietLabels'] as List).map((e) => e as String).toList(),
+      id: json['id'],
+      title: json['title'],
+      category: json['category'],
+      ingredients: List<String>.from(json['ingredients']),
+      instructions: json['instructions'],
+      url: json['url'],
     );
   }
 }
