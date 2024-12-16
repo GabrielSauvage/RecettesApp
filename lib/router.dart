@@ -63,12 +63,13 @@ GoRouter createRouter() {
         },
       ),
       GoRoute(
-        path: '/recipe/:idMeal',
+        path: '/recipe/:idMeal/:categoryId',
         pageBuilder: (context, state) {
           final idMeal = state.params['idMeal']!;
+          final categoryId = state.params['categoryId']!;
           return CustomTransitionPage(
             key: state.pageKey,
-            child: RecipeDetail(idMeal: idMeal),
+            child: RecipeDetail(idMeal: idMeal, categoryId: categoryId),
             transitionsBuilder: (context, animation, secondaryAnimation, child) {
               return _buildSlideTransition(
                 context: context,

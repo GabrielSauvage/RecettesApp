@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../models/recipe.dart';
 import '../../utils/api_client.dart';
+import '../widgets/bottom_nav_bar.dart';
 
 class RecipeDetail extends StatefulWidget {
   final String idMeal;
+  final String categoryId;
 
-  const RecipeDetail({super.key, required this.idMeal});
+  const RecipeDetail({super.key, required this.idMeal, required this.categoryId});
 
   @override
   _RecipeDetailState createState() => _RecipeDetailState();
@@ -43,6 +46,13 @@ class _RecipeDetailState extends State<RecipeDetail> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Recipe Detail'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          color: ColorScheme.fromSeed(seedColor: const Color(0xFFDDBFA9)).primary,
+          onPressed: () {
+            context.go('/recipes/${widget.categoryId}', extra: {'reverse': true});
+          },
+        ),
         actions: [
           IconButton(
             icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border),
@@ -90,6 +100,7 @@ class _RecipeDetailState extends State<RecipeDetail> {
           }
         },
       ),
+      bottomNavigationBar: const BottomNavBar(selectedIndex: -1),
     );
   }
 

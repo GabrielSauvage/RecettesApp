@@ -38,8 +38,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
       onTap: _onItemTapped,
       selectedItemColor: currentIndex == -1 ? Colors.grey : Theme.of(context).primaryColor,
       unselectedItemColor: Colors.grey,
-      showSelectedLabels: currentIndex != -1,
       showUnselectedLabels: true,
+      showSelectedLabels: true,
     );
   }
 }
