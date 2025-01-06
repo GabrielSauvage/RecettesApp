@@ -7,26 +7,28 @@ import '../widgets/bottom_nav_bar.dart';
 import '../widgets/recipe_card.dart';
 import '../../models/recipe.dart';
 
-class RecipeListByCategory extends StatelessWidget {
-  final String categoryId;
+class RecipeList extends StatelessWidget {
+  final String id;
+  final bool isCategory;
 
-  const RecipeListByCategory({super.key, required this.categoryId});
+  const RecipeList({super.key, required this.id, required this.isCategory});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => RecipeCubit(
         recipeRepository: RecipeRepository(),
-      )..fetchRecipesByCategory(categoryId),
-      child: RecipeListView(categoryId: categoryId),
+      )..fetchRecipes(isCategory ? 'category' : 'country', id),
+      child: RecipeListView(id: id, isCategory: isCategory),
     );
   }
 }
 
 class RecipeListView extends StatefulWidget {
-  final String categoryId;
+  final String id;
+  final bool isCategory;
 
-  const RecipeListView({super.key, required this.categoryId});
+  const RecipeListView({super.key, required this.id, required this.isCategory});
 
   @override
   _RecipeListViewState createState() => _RecipeListViewState();
@@ -44,13 +46,13 @@ class _RecipeListViewState extends State<RecipeListView> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: false, // Empêche les pops natifs par défaut
+      canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         context.go('/', extra: {'reverse': true});
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text('${widget.categoryId} recipes'),
+          title: Text('${widget.id} recipes'),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             color: ColorScheme.fromSeed(seedColor: const Color(0xFFDDBFA9))
@@ -98,7 +100,7 @@ class _RecipeListViewState extends State<RecipeListView> {
                     itemBuilder: (context, index) {
                       return RecipeCard(
                           recipe: filteredRecipes[index],
-                          categoryId: widget.categoryId);
+                          categoryId: widget.id);
                     },
                   );
                 },

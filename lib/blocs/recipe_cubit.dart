@@ -8,6 +8,20 @@ class RecipeCubit extends Cubit<List<Recipe>?> {
 
   RecipeCubit({required this.recipeRepository}) : super(null);
 
+  Future<void> fetchRecipes(String type, String id) async {
+    try {
+      if (type == 'category') {
+        await fetchRecipesByCategory(id);
+      } else if (type == 'country') {
+        await fetchRecipesByCountry(id);
+      } else {
+        throw Exception('Invalid type');
+      }
+    } catch (e) {
+      emit([]);
+    }
+  }
+
   Future<void> fetchRecipesByCategory(String category) async {
     try {
       final recipes = await recipeRepository.fetchRecipesByCategory(category);

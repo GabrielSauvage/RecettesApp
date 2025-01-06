@@ -158,7 +158,7 @@ class _HomeViewState extends State<HomeView> {
             final category = categories[index];
             return GestureDetector(
               onTap: () {
-                context.go('/recipes/${category.strCategory}');
+                context.go('/recipes/${category.strCategory}', extra: {'isCategory': true});
               },
               child: CategoryCard(category: category),
             );
@@ -190,7 +190,7 @@ class _HomeViewState extends State<HomeView> {
             final country = countries[index];
             return GestureDetector(
               onTap: () {
-                context.go('/recipes/country/${country.strArea}');
+                context.go('/recipes/${country.strArea}', extra: {'isCategory': false});
               },
               child: CountryCard(country: country),
             );
