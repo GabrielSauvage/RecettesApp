@@ -35,4 +35,14 @@ class RecipeCubit extends Cubit<List<Recipe>?> {
     }
   }
 
+  Future<void> removeFavoriteRecipe(String idMeal) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(idMeal);
+      final updatedRecipes = state?.where((recipe) => recipe.idMeal != idMeal).toList();
+      emit(updatedRecipes);
+    } catch (e) {
+    }
+  }
+
 }

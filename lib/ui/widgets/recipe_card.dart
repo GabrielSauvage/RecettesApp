@@ -6,8 +6,9 @@ import 'package:go_router/go_router.dart';
 class RecipeCard extends StatefulWidget {
   final Recipe recipe;
   final String categoryId;
+  final VoidCallback? onFavoriteToggle;
 
-  const RecipeCard({super.key, required this.recipe, required this.categoryId});
+  const RecipeCard({super.key, required this.recipe, required this.categoryId, this.onFavoriteToggle});
 
   @override
   _RecipeCardState createState() => _RecipeCardState();
@@ -35,6 +36,7 @@ class _RecipeCardState extends State<RecipeCard> {
       isFavorite = !isFavorite;
       prefs.setBool(widget.recipe.idMeal, isFavorite);
     });
+    widget.onFavoriteToggle?.call();
   }
 
   @override

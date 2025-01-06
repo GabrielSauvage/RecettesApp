@@ -29,11 +29,34 @@ class FavoritesView extends StatefulWidget {
 
 class _FavoritesViewState extends State<FavoritesView> {
   String _searchQuery = '';
+  final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
 
   void _filterRecipes(String query) {
     setState(() {
       _searchQuery = query;
     });
+  }
+
+  void _removeRecipe(int index, Recipe recipe) {
+    context.read<RecipeCubit>().removeFavoriteRecipe(recipe.idMeal);
+    _listKey.currentState?.removeItem(
+      index,
+          (context, animation) => _buildRemovedItem(context, recipe, animation),
+      duration: const Duration(milliseconds: 300),
+    );
+  }
+
+  Widget _buildRemovedItem(BuildContext context, Recipe recipe, Animation<double> animation) {
+    return FadeTransition(
+      opacity: animation,
+      child: SizeTransition(
+        sizeFactor: animation,
+        child: RecipeCard(
+          recipe: recipe,
+          categoryId: recipe.strCategory,
+        ),
+      ),
+    );
   }
 
   @override
@@ -73,10 +96,20 @@ class _FavoritesViewState extends State<FavoritesView> {
 
                   final filteredRecipes = recipes.where((recipe) => recipe.strMeal.toLowerCase().contains(_searchQuery.toLowerCase())).toList();
 
-                  return ListView.builder(
-                    itemCount: filteredRecipes.length,
-                    itemBuilder: (context, index) {
-                      return RecipeCard(recipe: filteredRecipes[index], categoryId: filteredRecipes[index].strCategory);
+                  return AnimatedList(
+                    key: _listKey,
+                    initialItemCount: filteredRecipes.length,
+                    itemBuilder: (context, index, animation) {
+                      return SizeTransition(
+                        sizeFactor: animation,
+                        child: RecipeCard(
+                          recipe: filteredRecipes[index],
+                          categoryId: filteredRecipes[index].strCategory,
+                          onFavoriteToggle: () {
+                            _removeRecipe(index, filteredRecipes[index]);
+                          },
+                        ),
+                      );
                     },
                   );
                 },
