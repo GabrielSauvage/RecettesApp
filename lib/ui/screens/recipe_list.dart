@@ -1,47 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import '../../utils/api_client.dart';
+import '../../blocs/recipe_cubit.dart';
+import '../../repositories/recipe_repository.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/recipe_card.dart';
 import '../../models/recipe.dart';
 
-class RecipeList extends StatefulWidget {
+class RecipeList extends StatelessWidget {
   final String categoryId;
 
   const RecipeList({super.key, required this.categoryId});
 
   @override
-  _RecipeListState createState() => _RecipeListState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => RecipeCubit(
+        recipeRepository: RecipeRepository(),
+      )..fetchRecipesByCategory(categoryId),
+      child: RecipeListView(categoryId: categoryId),
+    );
+  }
 }
 
-class _RecipeListState extends State<RecipeList> {
-  List<Recipe> _recipes = [];
-  List<Recipe> _filteredRecipes = [];
-  bool _isLoading = true;
-  String _searchQuery = '';
+class RecipeListView extends StatefulWidget {
+  final String categoryId;
+
+  const RecipeListView({super.key, required this.categoryId});
 
   @override
-  void initState() {
-    super.initState();
-    _fetchRecipes();
-  }
+  _RecipeListViewState createState() => _RecipeListViewState();
+}
 
-  Future<void> _fetchRecipes() async {
-    final apiClient = ApiClient();
-    final recipes = await apiClient.fetchRecipesByCategory(widget.categoryId);
-    setState(() {
-      _recipes = recipes;
-      _filteredRecipes = _recipes;
-      _isLoading = false;
-    });
-  }
+class _RecipeListViewState extends State<RecipeListView> {
+  String _searchQuery = '';
 
   void _filterRecipes(String query) {
     setState(() {
       _searchQuery = query;
-      _filteredRecipes = _recipes.where((recipe) => recipe.strMeal.toLowerCase().contains(query.toLowerCase())).toList();
     });
   }
 
@@ -58,9 +54,7 @@ class _RecipeListState extends State<RecipeList> {
           },
         ),
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Column(
+      body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -73,10 +67,21 @@ class _RecipeListState extends State<RecipeList> {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: _filteredRecipes.length,
-              itemBuilder: (context, index) {
-                return RecipeCard(recipe: _filteredRecipes[index], categoryId: widget.categoryId);
+            child: BlocBuilder<RecipeCubit, List<Recipe>>(
+              buildWhen: (previous, current) => previous != current,
+              builder: (context, recipes) {
+                if (recipes.isEmpty) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                final filteredRecipes = recipes.where((recipe) => recipe.strMeal.toLowerCase().contains(_searchQuery.toLowerCase())).toList();
+
+                return ListView.builder(
+                  itemCount: filteredRecipes.length,
+                  itemBuilder: (context, index) {
+                    return RecipeCard(recipe: filteredRecipes[index], categoryId: widget.categoryId);
+                  },
+                );
               },
             ),
           ),

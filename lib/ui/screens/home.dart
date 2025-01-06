@@ -1,33 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../blocs/category_cubit.dart';
+import '../../blocs/country_cubit.dart';
 import '../../models/category.dart';
 import '../../models/country.dart';
-import '../../utils/api_client.dart';
+import '../../repositories/category_repository.dart';
+import '../../repositories/country_repository.dart';
 import '../widgets/category_card.dart';
 import 'package:go_router/go_router.dart';
 import '../widgets/bottom_nav_bar.dart';
-import '../widgets/category_card.dart';
 import '../widgets/country_card.dart';
 
-class Home extends StatefulWidget {
+class Home extends StatelessWidget {
   const Home({super.key});
 
   @override
-  _HomeState createState() => _HomeState();
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => CategoryCubit(
+            categoryRepository: CategoryRepository(),
+          )..fetchCategories(),
+        ),
+        BlocProvider(
+          create: (context) => CountryCubit(
+            countryRepository: CountryRepository(),
+          )..fetchCountries(),
+        ),
+      ],
+      child: HomeView(),
+    );
+  }
 }
 
-class _HomeState extends State<Home> {
-  late Future<List<Category>> futureCategories;
-  late Future<List<Country>> futureCountries;
-  final ApiClient apiClient = ApiClient();
-  bool showCategories = true;
-  String searchQuery = '';
+class HomeView extends StatefulWidget {
+  const HomeView({super.key});
 
   @override
-  void initState() {
-    super.initState();
-    futureCategories = apiClient.fetchCategories();
-    futureCountries = apiClient.fetchCountries();
-  }
+  _HomeViewState createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  bool showCategories = true;
+  String searchQuery = '';
 
   @override
   Widget build(BuildContext context) {
@@ -116,59 +132,51 @@ class _HomeState extends State<Home> {
   }
 
   Widget _buildCategories() {
-    return FutureBuilder<List<Category>>(
-      future: futureCategories,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
+    return BlocBuilder<CategoryCubit, List<Category>>(
+      buildWhen: (previous, current) => previous != current,
+      builder: (context, categories) {
+        if (categories.isEmpty) {
           return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Center(child: Text('No categories found'));
-        } else {
-          return GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 1.0,
-            ),
-            itemCount: snapshot.data!.length,
-            itemBuilder: (context, index) {
-              final category = snapshot.data![index];
-              return GestureDetector(
-                onTap: () {
-                  context.go('/recipes/${category.strCategory}');
-                },
-                child: CategoryCard(category: category),
-              );
-            },
-          );
         }
+
+        return GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: 1.0,
+          ),
+          itemCount: categories.length,
+          itemBuilder: (context, index) {
+            final category = categories[index];
+            return GestureDetector(
+              onTap: () {
+                context.go('/recipes/${category.strCategory}');
+              },
+              child: CategoryCard(category: category),
+            );
+          },
+        );
       },
     );
   }
 
   Widget _buildCountries() {
-    return FutureBuilder<List<Country>>(
-      future: futureCountries,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
+    return BlocBuilder<CountryCubit, List<Country>>(
+      buildWhen: (previous, current) => previous != current,
+      builder: (context, countries) {
+        if (countries.isEmpty) {
           return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Center(child: Text('No countries found'));
-        } else {
-          return GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 1.0,
-            ),
-            itemCount: snapshot.data!.length,
-            itemBuilder: (context, index) {
-              return CountryCard(country: snapshot.data![index]);
-            },
-          );
         }
+
+        return GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: 1.0,
+          ),
+          itemCount: countries.length,
+          itemBuilder: (context, index) {
+            return CountryCard(country: countries[index]);
+          },
+        );
       },
     );
   }

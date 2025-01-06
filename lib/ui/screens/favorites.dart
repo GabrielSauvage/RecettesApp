@@ -1,53 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../../models/recipe.dart';
-import '../../utils/api_client.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../blocs/recipe_cubit.dart';
+import '../../repositories/recipe_repository.dart';
 import '../widgets/recipe_card.dart';
 import '../widgets/bottom_nav_bar.dart';
+import '../../models/recipe.dart';
 
-class Favorites extends StatefulWidget {
+class Favorites extends StatelessWidget {
   const Favorites({super.key});
 
   @override
-  _FavoritesState createState() => _FavoritesState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => RecipeCubit(
+        recipeRepository: RecipeRepository(),
+      )..fetchFavoriteRecipes(),
+      child: FavoritesView(),
+    );
+  }
 }
 
-class _FavoritesState extends State<Favorites> {
-  List<Recipe> _favoriteRecipes = [];
-  List<Recipe> _filteredRecipes = [];
-  bool _isLoading = true;
-  String _searchQuery = '';
+class FavoritesView extends StatefulWidget {
+  const FavoritesView({super.key});
 
   @override
-  void initState() {
-    super.initState();
-    _loadFavoriteRecipes();
-  }
+  _FavoritesViewState createState() => _FavoritesViewState();
+}
 
-  Future<void> _loadFavoriteRecipes() async {
-    final prefs = await SharedPreferences.getInstance();
-    final keys = prefs.getKeys();
-    final List<Recipe> favoriteRecipes = [];
-
-    for (String key in keys) {
-      if (prefs.getBool(key) == true) {
-        // Assuming you have a method to get recipe details by ID
-        final recipe = await ApiClient.getMealDetails(key);
-        favoriteRecipes.add(recipe);
-      }
-    }
-
-    setState(() {
-      _favoriteRecipes = favoriteRecipes;
-      _filteredRecipes = _favoriteRecipes;
-      _isLoading = false;
-    });
-  }
+class _FavoritesViewState extends State<FavoritesView> {
+  String _searchQuery = '';
 
   void _filterRecipes(String query) {
     setState(() {
       _searchQuery = query;
-      _filteredRecipes = _favoriteRecipes.where((recipe) => recipe.strMeal.toLowerCase().contains(query.toLowerCase())).toList();
     });
   }
 
@@ -57,9 +42,7 @@ class _FavoritesState extends State<Favorites> {
       appBar: AppBar(
         title: const Text('Favorite Recipes'),
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Column(
+      body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -72,10 +55,21 @@ class _FavoritesState extends State<Favorites> {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: _filteredRecipes.length,
-              itemBuilder: (context, index) {
-                return RecipeCard(recipe: _filteredRecipes[index], categoryId: _filteredRecipes[index].strCategory);
+            child: BlocBuilder<RecipeCubit, List<Recipe>>(
+              buildWhen: (previous, current) => previous != current,
+              builder: (context, recipes) {
+                if (recipes.isEmpty) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                final filteredRecipes = recipes.where((recipe) => recipe.strMeal.toLowerCase().contains(_searchQuery.toLowerCase())).toList();
+
+                return ListView.builder(
+                  itemCount: filteredRecipes.length,
+                  itemBuilder: (context, index) {
+                    return RecipeCard(recipe: filteredRecipes[index], categoryId: filteredRecipes[index].strCategory);
+                  },
+                );
               },
             ),
           ),

@@ -1,28 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../models/recipe.dart';
-import '../../utils/api_client.dart';
+import '../../blocs/recipe_cubit.dart';
+import '../../repositories/recipe_repository.dart';
 import '../widgets/bottom_nav_bar.dart';
+import '../../models/recipe.dart';
 
-class RecipeDetail extends StatefulWidget {
+class RecipeDetail extends StatelessWidget {
   final String idMeal;
   final String categoryId;
 
   const RecipeDetail({super.key, required this.idMeal, required this.categoryId});
 
   @override
-  _RecipeDetailState createState() => _RecipeDetailState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => RecipeCubit(
+        recipeRepository: RecipeRepository(),
+      )..getMealDetails(idMeal),
+      child: RecipeDetailView(idMeal: idMeal, categoryId: categoryId),
+    );
+  }
 }
 
-class _RecipeDetailState extends State<RecipeDetail> {
-  late Future<Recipe> futureRecipe;
+class RecipeDetailView extends StatefulWidget {
+  final String idMeal;
+  final String categoryId;
+
+  const RecipeDetailView({super.key, required this.idMeal, required this.categoryId});
+
+  @override
+  _RecipeDetailViewState createState() => _RecipeDetailViewState();
+}
+
+class _RecipeDetailViewState extends State<RecipeDetailView> {
   bool isFavorite = false;
 
   @override
   void initState() {
     super.initState();
-    futureRecipe = ApiClient.getMealDetails(widget.idMeal);
     _loadFavoriteStatus();
   }
 
@@ -60,44 +77,41 @@ class _RecipeDetailState extends State<RecipeDetail> {
           ),
         ],
       ),
-      body: FutureBuilder<Recipe>(
-        future: futureRecipe,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+      body: BlocBuilder<RecipeCubit, List<Recipe>>(
+        buildWhen: (previous, current) => previous != current,
+        builder: (context, recipes) {
+          if (recipes.isEmpty) {
             return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData) {
-            return const Center(child: Text('Recipe not found'));
-          } else {
-            final recipe = snapshot.data!;
-            return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  NetworkImageWithErrorHandling(url: recipe.strMealThumb),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      recipe.strMeal,
-                      style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'Category: ${recipe.strCategory}\nArea: ${recipe.strArea}',
-                      style: const TextStyle(fontSize: 16),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  _buildExpansionTile('Ingredients', _buildIngredientsList(recipe)),
-                  _buildExpansionTile('Instructions', Text(recipe.strInstructions)),
-                ],
-              ),
-            );
           }
+
+          final recipe = recipes.first;
+
+          return SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                NetworkImageWithErrorHandling(url: recipe.strMealThumb),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    recipe.strMeal,
+                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Category: ${recipe.strCategory}\nArea: ${recipe.strArea}',
+                    style: const TextStyle(fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                _buildExpansionTile('Ingredients', _buildIngredientsList(recipe)),
+                _buildExpansionTile('Instructions', Text(recipe.strInstructions)),
+              ],
+            ),
+          );
         },
       ),
       bottomNavigationBar: const BottomNavBar(selectedIndex: -1),
