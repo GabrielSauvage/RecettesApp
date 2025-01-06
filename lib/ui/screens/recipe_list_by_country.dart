@@ -73,10 +73,10 @@ class _RecipeListViewState extends State<RecipeListView> {
               ),
             ),
             Expanded(
-              child: BlocBuilder<RecipeCubit, List<Recipe>>(
+              child: BlocBuilder<RecipeCubit, List<Recipe>?>(
                 buildWhen: (previous, current) => previous != current,
                 builder: (context, recipes) {
-                  if (recipes.isEmpty) {
+                  if (recipes == null) {
                     return const Center(child: CircularProgressIndicator());
                   }
 
