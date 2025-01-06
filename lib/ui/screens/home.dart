@@ -43,7 +43,13 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   bool showCategories = true;
-  String searchQuery = '';
+  String _searchQuery = '';
+
+  void _filterRecipes(String query) {
+    setState(() {
+      _searchQuery = query;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +74,7 @@ class _HomeViewState extends State<HomeView> {
               ),
               onChanged: (value) {
                 setState(() {
-                  searchQuery = value;
+                  _searchQuery = value;
                 });
               },
             ),
@@ -142,14 +148,20 @@ class _HomeViewState extends State<HomeView> {
           return const Center(child: Text('No recipes found.'));
         }
 
+        final filteredCategories = categories
+            .where((category) => category.strCategory
+            .toLowerCase()
+            .contains(_searchQuery.toLowerCase()))
+            .toList();
+
         return GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             childAspectRatio: 1.0,
           ),
-          itemCount: categories.length,
+          itemCount: filteredCategories.length,
           itemBuilder: (context, index) {
-            final category = categories[index];
+            final category = filteredCategories[index];
             return GestureDetector(
               onTap: () {
                 Navigator.pushNamed(
@@ -178,14 +190,20 @@ class _HomeViewState extends State<HomeView> {
           return const Center(child: Text('No recipes found.'));
         }
 
+        final filteredCountries = countries
+            .where((country) => country.strArea
+            .toLowerCase()
+            .contains(_searchQuery.toLowerCase()))
+            .toList();
+
         return GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             childAspectRatio: 1.0,
           ),
-          itemCount: countries.length,
+          itemCount: filteredCountries.length,
           itemBuilder: (context, index) {
-            final country = countries[index];
+            final country = filteredCountries[index];
             return GestureDetector(
               onTap: () {
                 Navigator.pushNamed(

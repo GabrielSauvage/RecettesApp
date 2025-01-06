@@ -15,7 +15,7 @@ class RecipeRepository {
 
       return meals.map((meal) => Recipe.fromJson(meal)).toList();
     } else {
-      throw Exception("Error loading recipes");
+      throw Exception("Erreur lors du chargement des recettes");
     }
   }
 
@@ -28,7 +28,7 @@ class RecipeRepository {
 
       return meals.map((meal) => Recipe.fromJson(meal)).toList();
     } else {
-      throw Exception("Error loading recipes");
+      throw Exception("Erreur lors du chargement des recettes");
     }
   }
 
@@ -40,7 +40,7 @@ class RecipeRepository {
       final meal = data['meals'][0]; // Prendre le premier élément
       return Recipe.fromJson(meal);
     } else {
-      throw Exception("Error retrieving recipe details");
+      throw Exception("Erreur lors de la récupération des détails de la recette");
     }
   }
 
@@ -53,7 +53,7 @@ class RecipeRepository {
 
       return meals.map((meal) => Recipe.fromJson(meal)).toList();
     } else {
-      throw Exception("Error loading data");
+      throw Exception("Erreur lors du chargement des données");
     }
   }
 

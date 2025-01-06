@@ -9,7 +9,8 @@ build/
 .metadata
 
 # Local configuration file (sdk path, etc)
-local.properties
+android/local.properties
+android/gradle.properties
 
 # Log/OS Files
 *.log
