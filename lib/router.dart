@@ -52,11 +52,13 @@ GoRouter createRouter() {
             key: state.pageKey,
             child: RecipeList(categoryId: categoryId),
             transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              final reverse = state.extra != null && (state.extra as Map<String, dynamic>)['reverse'] == true;
               return _buildSlideTransition(
                 context: context,
                 child: child,
                 animation: animation,
                 secondaryAnimation: secondaryAnimation,
+                reverse: reverse,
               );
             },
           );
@@ -67,15 +69,18 @@ GoRouter createRouter() {
         pageBuilder: (context, state) {
           final idMeal = state.params['idMeal']!;
           final categoryId = state.params['categoryId']!;
+          final extra = state.extra as Map<String, dynamic>?;
           return CustomTransitionPage(
             key: state.pageKey,
-            child: RecipeDetail(idMeal: idMeal, categoryId: categoryId),
+            child: RecipeDetail(idMeal: idMeal, categoryId: categoryId, extra: extra),
             transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              final reverse = state.extra != null && (state.extra as Map<String, dynamic>)['reverse'] == true;
               return _buildSlideTransition(
                 context: context,
                 child: child,
                 animation: animation,
                 secondaryAnimation: secondaryAnimation,
+                reverse: reverse,
               );
             },
           );
@@ -87,11 +92,13 @@ GoRouter createRouter() {
           key: state.pageKey,
           child: const Favorites(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            final reverse = state.extra != null && (state.extra as Map<String, dynamic>)['reverse'] == true;
             return _buildSlideTransition(
               context: context,
               child: child,
               animation: animation,
               secondaryAnimation: secondaryAnimation,
+              reverse: reverse,
             );
           },
         ),
