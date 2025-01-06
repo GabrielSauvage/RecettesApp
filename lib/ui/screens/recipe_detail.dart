@@ -77,11 +77,15 @@ class _RecipeDetailViewState extends State<RecipeDetailView> {
           ),
         ],
       ),
-      body: BlocBuilder<RecipeCubit, List<Recipe>>(
+      body: BlocBuilder<RecipeCubit, List<Recipe>?>(
         buildWhen: (previous, current) => previous != current,
         builder: (context, recipes) {
-          if (recipes.isEmpty) {
+          if (recipes == null) {
             return const Center(child: CircularProgressIndicator());
+          }
+
+          if (recipes.isEmpty) {
+            return const Center(child: Text('No recipes found.'));
           }
 
           final recipe = recipes.first;

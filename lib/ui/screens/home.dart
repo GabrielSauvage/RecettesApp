@@ -54,14 +54,14 @@ class _HomeViewState extends State<HomeView> {
         title: const Text('Recipes paradise'),
       ),
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
+        padding: const EdgeInsets.fromLTRB(8.0, 0, 8.0, 0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 16.0),
             TextField(
               decoration: InputDecoration(
-                hintText: 'Search...',
+                labelText: 'Search',
                 prefixIcon: Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
@@ -132,11 +132,15 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Widget _buildCategories() {
-    return BlocBuilder<CategoryCubit, List<Category>>(
+    return BlocBuilder<CategoryCubit, List<Category>?>(
       buildWhen: (previous, current) => previous != current,
       builder: (context, categories) {
-        if (categories.isEmpty) {
+        if (categories == null) {
           return const Center(child: CircularProgressIndicator());
+        }
+
+        if (categories.isEmpty) {
+          return const Center(child: Text('No recipes found.'));
         }
 
         return GridView.builder(
@@ -160,11 +164,15 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Widget _buildCountries() {
-    return BlocBuilder<CountryCubit, List<Country>>(
+    return BlocBuilder<CountryCubit, List<Country>?>(
       buildWhen: (previous, current) => previous != current,
       builder: (context, countries) {
-        if (countries.isEmpty) {
+        if (countries == null) {
           return const Center(child: CircularProgressIndicator());
+        }
+
+        if (countries.isEmpty) {
+          return const Center(child: Text('No recipes found.'));
         }
 
         return GridView.builder(

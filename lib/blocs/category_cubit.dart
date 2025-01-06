@@ -2,10 +2,10 @@ import 'package:bloc/bloc.dart';
 import '../models/category.dart';
 import '../repositories/category_repository.dart';
 
-class CategoryCubit extends Cubit<List<Category>> {
+class CategoryCubit extends Cubit<List<Category>?> {
   final CategoryRepository categoryRepository;
 
-  CategoryCubit({required this.categoryRepository}) : super([]);
+  CategoryCubit({required this.categoryRepository}) : super(null);
 
   Future<void> fetchCategories() async {
     try {

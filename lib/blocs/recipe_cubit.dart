@@ -1,11 +1,12 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/recipe.dart';
 import '../repositories/recipe_repository.dart';
 
-class RecipeCubit extends Cubit<List<Recipe>> {
+class RecipeCubit extends Cubit<List<Recipe>?> {
   final RecipeRepository recipeRepository;
 
-  RecipeCubit({required this.recipeRepository}) : super([]);
+  RecipeCubit({required this.recipeRepository}) : super(null);
 
   Future<void> fetchRecipesByCategory(String category) async {
     try {
@@ -33,4 +34,5 @@ class RecipeCubit extends Cubit<List<Recipe>> {
       emit([]);
     }
   }
+
 }

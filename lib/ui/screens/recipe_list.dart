@@ -59,19 +59,26 @@ class _RecipeListViewState extends State<RecipeListView> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Search',
-                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
               ),
               onChanged: _filterRecipes,
             ),
           ),
           Expanded(
-            child: BlocBuilder<RecipeCubit, List<Recipe>>(
+            child: BlocBuilder<RecipeCubit, List<Recipe>?>(
               buildWhen: (previous, current) => previous != current,
               builder: (context, recipes) {
-                if (recipes.isEmpty) {
+                if (recipes == null) {
                   return const Center(child: CircularProgressIndicator());
+                }
+
+                if (recipes.isEmpty) {
+                  return const Center(child: Text('No recipes found.'));
                 }
 
                 final filteredRecipes = recipes.where((recipe) => recipe.strMeal.toLowerCase().contains(_searchQuery.toLowerCase())).toList();

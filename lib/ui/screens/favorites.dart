@@ -42,38 +42,48 @@ class _FavoritesViewState extends State<FavoritesView> {
       appBar: AppBar(
         title: const Text('Favorite Recipes'),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              decoration: const InputDecoration(
-                labelText: 'Search',
-                border: OutlineInputBorder(),
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(8.0, 0, 8.0, 0),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                decoration: InputDecoration(
+                  labelText: 'Search',
+                  prefixIcon: Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
               ),
-              onChanged: _filterRecipes,
+                ),
+                onChanged: _filterRecipes,
+              ),
             ),
-          ),
-          Expanded(
-            child: BlocBuilder<RecipeCubit, List<Recipe>>(
-              buildWhen: (previous, current) => previous != current,
-              builder: (context, recipes) {
-                if (recipes.isEmpty) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+            Expanded(
+              child: BlocBuilder<RecipeCubit, List<Recipe>?>(
+                buildWhen: (previous, current) => previous != current,
+                builder: (context, recipes) {
+                  if (recipes == null) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
 
-                final filteredRecipes = recipes.where((recipe) => recipe.strMeal.toLowerCase().contains(_searchQuery.toLowerCase())).toList();
+                  if (recipes.isEmpty) {
+                    return const Center(child: Text('No recipes found.'));
+                  }
 
-                return ListView.builder(
-                  itemCount: filteredRecipes.length,
-                  itemBuilder: (context, index) {
-                    return RecipeCard(recipe: filteredRecipes[index], categoryId: filteredRecipes[index].strCategory);
-                  },
-                );
-              },
+                  final filteredRecipes = recipes.where((recipe) => recipe.strMeal.toLowerCase().contains(_searchQuery.toLowerCase())).toList();
+
+                  return ListView.builder(
+                    itemCount: filteredRecipes.length,
+                    itemBuilder: (context, index) {
+                      return RecipeCard(recipe: filteredRecipes[index], categoryId: filteredRecipes[index].strCategory);
+                    },
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       bottomNavigationBar: const BottomNavBar(selectedIndex: 1),
     );
