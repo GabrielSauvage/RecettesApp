@@ -54,6 +54,7 @@ class _FavoritesViewState extends State<FavoritesView> {
         child: RecipeCard(
           recipe: recipe,
           categoryId: recipe.strCategory,
+          fromFavorites: true,
         ),
       ),
     );
@@ -105,6 +106,7 @@ class _FavoritesViewState extends State<FavoritesView> {
                         child: RecipeCard(
                           recipe: filteredRecipes[index],
                           categoryId: filteredRecipes[index].strCategory,
+                          fromFavorites: true,
                           onFavoriteToggle: () {
                             _removeRecipe(index, filteredRecipes[index]);
                           },

@@ -10,8 +10,9 @@ import '../../models/recipe.dart';
 class RecipeDetail extends StatelessWidget {
   final String idMeal;
   final String categoryId;
+  final Map<String, dynamic>? extra;
 
-  const RecipeDetail({super.key, required this.idMeal, required this.categoryId});
+  const RecipeDetail({super.key, required this.idMeal, required this.categoryId, this.extra});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,7 @@ class RecipeDetail extends StatelessWidget {
       create: (context) => RecipeCubit(
         recipeRepository: RecipeRepository(),
       )..getMealDetails(idMeal),
-      child: RecipeDetailView(idMeal: idMeal, categoryId: categoryId),
+      child: RecipeDetailView(idMeal: idMeal, categoryId: categoryId, extra: extra),
     );
   }
 }
@@ -27,8 +28,9 @@ class RecipeDetail extends StatelessWidget {
 class RecipeDetailView extends StatefulWidget {
   final String idMeal;
   final String categoryId;
+  final Map<String, dynamic>? extra;
 
-  const RecipeDetailView({super.key, required this.idMeal, required this.categoryId});
+  const RecipeDetailView({super.key, required this.idMeal, required this.categoryId, this.extra});
 
   @override
   _RecipeDetailViewState createState() => _RecipeDetailViewState();
@@ -60,20 +62,19 @@ class _RecipeDetailViewState extends State<RecipeDetailView> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-        canPop: false, // Empêche les pops natifs par défaut
-        onPopInvokedWithResult: (didPop, result) {
-      context.go('/', extra: {'reverse': true});
-    },
-    child: Scaffold(
+    final fromFavorites = widget.extra?['fromFavorites'] ?? false;
+    return Scaffold(
       appBar: AppBar(
         title: const Text('Recipe Detail'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           color: ColorScheme.fromSeed(seedColor: const Color(0xFFDDBFA9)).primary,
           onPressed: () {
-            context.go('/recipes/${widget.categoryId}', extra: {'reverse': true});
-          },
+            if (fromFavorites) {
+              context.go('/favorites', extra: {'reverse': true});
+            } else {
+              context.go('/recipes/${widget.categoryId}', extra: {'reverse': true});
+            }          },
         ),
         actions: [
           IconButton(
@@ -124,7 +125,6 @@ class _RecipeDetailViewState extends State<RecipeDetailView> {
         },
       ),
       bottomNavigationBar: const BottomNavBar(selectedIndex: -1),
-    ),
     );
   }
 
