@@ -42,7 +42,7 @@ class _FavoritesViewState extends State<FavoritesView> {
     _listKey.currentState?.removeItem(
       index,
           (context, animation) => _buildRemovedItem(context, recipe, animation),
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 500),
     );
   }
 

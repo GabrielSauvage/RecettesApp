@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
     final GoRouter _router = createRouter();
 
     return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
       routerConfig: _router,
       title: 'Recipe paradise',
       theme: appTheme,
