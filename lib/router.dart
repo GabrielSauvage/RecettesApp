@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tp/ui/screens/recipe_detail.dart';
+import 'package:tp/ui/screens/recipe_list_by_country.dart';
 import 'ui/screens/home.dart';
-import 'ui/screens/recipe_list.dart';
+import 'ui/screens/recipe_list_by_category.dart';
 import 'ui/screens/favorites.dart';
 
 class SlidingPageRoute extends PageRouteBuilder {
@@ -50,7 +51,25 @@ GoRouter createRouter() {
           final categoryId = state.params['categoryId']!;
           return CustomTransitionPage(
             key: state.pageKey,
-            child: RecipeList(categoryId: categoryId),
+            child: RecipeListByCategory(categoryId: categoryId),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return _buildSlideTransition(
+                context: context,
+                child: child,
+                animation: animation,
+                secondaryAnimation: secondaryAnimation,
+              );
+            },
+          );
+        },
+      ),
+      GoRoute(
+        path: '/recipes/country/:country',
+        pageBuilder: (context, state) {
+          final country = state.params['country']!;
+          return CustomTransitionPage(
+            key: state.pageKey,
+            child: RecipeListByCountry(country: country),
             transitionsBuilder: (context, animation, secondaryAnimation, child) {
               return _buildSlideTransition(
                 context: context,

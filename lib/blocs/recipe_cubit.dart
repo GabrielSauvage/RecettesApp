@@ -17,6 +17,15 @@ class RecipeCubit extends Cubit<List<Recipe>?> {
     }
   }
 
+  Future<void> fetchRecipesByCountry(String country) async {
+    try {
+      final recipes = await recipeRepository.fetchRecipesByCountry(country);
+      emit(recipes);
+    } catch (e) {
+      emit([]);
+    }
+  }
+
   Future<void> fetchFavoriteRecipes() async {
     try {
       final recipes = await recipeRepository.fetchFavoriteRecipes();

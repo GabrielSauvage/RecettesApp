@@ -48,8 +48,12 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
-    return Scaffold(
+    return PopScope(
+        canPop: false, // Empêche les pops natifs par défaut
+        onPopInvokedWithResult: (didPop, result) {
+      context.go('/', extra: {'reverse': true});
+    },
+    child: Scaffold(
       appBar: AppBar(
         title: const Text('Recipes paradise'),
       ),
@@ -128,6 +132,7 @@ class _HomeViewState extends State<HomeView> {
         ),
       ),
       bottomNavigationBar: const BottomNavBar(selectedIndex: 0),
+    ),
     );
   }
 
@@ -182,7 +187,13 @@ class _HomeViewState extends State<HomeView> {
           ),
           itemCount: countries.length,
           itemBuilder: (context, index) {
-            return CountryCard(country: countries[index]);
+            final country = countries[index];
+            return GestureDetector(
+              onTap: () {
+                context.go('/recipes/country/${country.strArea}');
+              },
+              child: CountryCard(country: country),
+            );
           },
         );
       },

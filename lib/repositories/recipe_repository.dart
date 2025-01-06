@@ -19,6 +19,19 @@ class RecipeRepository {
     }
   }
 
+  Future<List<Recipe>> fetchRecipesByCountry(String country) async {
+    final response = await http.get(Uri.parse('${_baseUrl}filter.php?a=$country'));
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      final meals = data['meals'] as List<dynamic>;
+
+      return meals.map((meal) => Recipe.fromJson(meal)).toList();
+    } else {
+      throw Exception("Erreur lors du chargement des recettes");
+    }
+  }
+
   Future<Recipe> getMealDetails(String idMeal) async {
     final response = await http.get(Uri.parse('${_baseUrl}lookup.php?i=$idMeal'));
 

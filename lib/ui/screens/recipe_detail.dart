@@ -60,7 +60,12 @@ class _RecipeDetailViewState extends State<RecipeDetailView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+        canPop: false, // Empêche les pops natifs par défaut
+        onPopInvokedWithResult: (didPop, result) {
+      context.go('/', extra: {'reverse': true});
+    },
+    child: Scaffold(
       appBar: AppBar(
         title: const Text('Recipe Detail'),
         leading: IconButton(
@@ -119,6 +124,7 @@ class _RecipeDetailViewState extends State<RecipeDetailView> {
         },
       ),
       bottomNavigationBar: const BottomNavBar(selectedIndex: -1),
+    ),
     );
   }
 
