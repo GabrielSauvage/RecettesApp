@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../blocs/recipe_cubit.dart';
+import '../../models/recipe.dart';
 import '../../repositories/recipe_repository.dart';
 import '../widgets/bottom_nav_bar.dart';
-import '../../models/recipe.dart';
 
 class RecipeDetail extends StatelessWidget {
   final String idMeal;
   final String categoryId;
   final Map<String, dynamic>? extra;
 
-  const RecipeDetail({super.key, required this.idMeal, required this.categoryId, this.extra});
+  const RecipeDetail(
+      {super.key, required this.idMeal, required this.categoryId, this.extra});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,8 @@ class RecipeDetail extends StatelessWidget {
       create: (context) => RecipeCubit(
         recipeRepository: RecipeRepository(),
       )..getMealDetails(idMeal),
-      child: RecipeDetailView(idMeal: idMeal, categoryId: categoryId, extra: extra),
+      child: RecipeDetailView(
+          idMeal: idMeal, categoryId: categoryId, extra: extra),
     );
   }
 }
@@ -30,7 +32,8 @@ class RecipeDetailView extends StatefulWidget {
   final String categoryId;
   final Map<String, dynamic>? extra;
 
-  const RecipeDetailView({super.key, required this.idMeal, required this.categoryId, this.extra});
+  const RecipeDetailView(
+      {super.key, required this.idMeal, required this.categoryId, this.extra});
 
   @override
   _RecipeDetailViewState createState() => _RecipeDetailViewState();
@@ -62,19 +65,21 @@ class _RecipeDetailViewState extends State<RecipeDetailView> {
 
   @override
   Widget build(BuildContext context) {
-    final fromFavorites = widget.extra?['fromFavorites'] ?? false;
+    final fromFavorites = widget.extra?['fromFavorites'];
     return Scaffold(
       appBar: AppBar(
         title: const Text('Recipe Detail'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          color: ColorScheme.fromSeed(seedColor: const Color(0xFFDDBFA9)).primary,
+          color:
+              ColorScheme.fromSeed(seedColor: const Color(0xFFDDBFA9)).primary,
           onPressed: () {
             if (fromFavorites) {
-              context.go('/favorites', extra: {'reverse': true});
+              Navigator.pushNamed(context, '/favorites');
             } else {
-              context.go('/recipes/${widget.categoryId}', extra: {'reverse': true});
-            }          },
+              Navigator.pushNamed(context, '/recipes/${widget.categoryId}');
+            }
+          },
         ),
         actions: [
           IconButton(
@@ -105,7 +110,8 @@ class _RecipeDetailViewState extends State<RecipeDetailView> {
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     recipe.strMeal,
-                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 24, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -117,8 +123,10 @@ class _RecipeDetailViewState extends State<RecipeDetailView> {
                     textAlign: TextAlign.center,
                   ),
                 ),
-                _buildExpansionTile('Ingredients', _buildIngredientsList(recipe)),
-                _buildExpansionTile('Instructions', Text(recipe.strInstructions)),
+                _buildExpansionTile(
+                    'Ingredients', _buildIngredientsList(recipe)),
+                _buildExpansionTile(
+                    'Instructions', Text(recipe.strInstructions)),
               ],
             ),
           );
@@ -151,7 +159,8 @@ class _RecipeDetailViewState extends State<RecipeDetailView> {
       children: recipe.ingredients.map((ingredient) {
         return ListTile(
           leading: NetworkImageWithErrorHandling(
-            url: 'https://www.themealdb.com/images/ingredients/${ingredient.split(' ')[0]}.png',
+            url:
+                'https://www.themealdb.com/images/ingredients/${ingredient.split(' ')[0]}.png',
           ),
           title: Text(ingredient),
         );
@@ -170,7 +179,8 @@ class NetworkImageWithErrorHandling extends StatelessWidget {
     return Image.network(
       url,
       errorBuilder: (context, error, stackTrace) {
-        return Image.asset('lib/assets/no_image.png',
+        return Image.asset(
+          'lib/assets/no_image.png',
           width: 60,
           height: 60,
         );

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../blocs/category_cubit.dart';
 import '../../blocs/country_cubit.dart';
 import '../../models/category.dart';
 import '../../models/country.dart';
 import '../../repositories/category_repository.dart';
 import '../../repositories/country_repository.dart';
-import '../widgets/category_card.dart';
-import 'package:go_router/go_router.dart';
 import '../widgets/bottom_nav_bar.dart';
+import '../widgets/category_card.dart';
 import '../widgets/country_card.dart';
 
 class Home extends StatelessWidget {
@@ -29,7 +29,7 @@ class Home extends StatelessWidget {
           )..fetchCountries(),
         ),
       ],
-      child: HomeView(),
+      child: const HomeView(),
     );
   }
 }
@@ -48,12 +48,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return PopScope(
-        canPop: false, // Empêche les pops natifs par défaut
-        onPopInvokedWithResult: (didPop, result) {
-      context.go('/', extra: {'reverse': true});
-    },
-    child: Scaffold(
+    return Scaffold(
       appBar: AppBar(
         title: const Text('Recipes paradise'),
       ),
@@ -132,7 +127,6 @@ class _HomeViewState extends State<HomeView> {
         ),
       ),
       bottomNavigationBar: const BottomNavBar(selectedIndex: 0),
-    ),
     );
   }
 
@@ -158,7 +152,11 @@ class _HomeViewState extends State<HomeView> {
             final category = categories[index];
             return GestureDetector(
               onTap: () {
-                context.go('/recipes/${category.strCategory}', extra: {'isCategory': true});
+                Navigator.pushNamed(
+                  context,
+                  '/recipes/${category.strCategory}',
+                  arguments: true,
+                );
               },
               child: CategoryCard(category: category),
             );
@@ -190,7 +188,11 @@ class _HomeViewState extends State<HomeView> {
             final country = countries[index];
             return GestureDetector(
               onTap: () {
-                context.go('/recipes/${country.strArea}', extra: {'isCategory': false});
+                Navigator.pushNamed(
+                  context,
+                  '/recipes/${country.strArea}',
+                  arguments: false,
+                );
               },
               child: CountryCard(country: country),
             );

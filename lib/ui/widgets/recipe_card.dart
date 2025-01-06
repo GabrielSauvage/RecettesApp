@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../models/recipe.dart';
-import 'package:go_router/go_router.dart';
 
 class RecipeCard extends StatefulWidget {
   final Recipe recipe;
@@ -9,7 +9,12 @@ class RecipeCard extends StatefulWidget {
   final bool fromFavorites;
   final VoidCallback? onFavoriteToggle;
 
-  const RecipeCard({super.key, required this.recipe, required this.categoryId, this.fromFavorites = false, this.onFavoriteToggle});
+  const RecipeCard(
+      {super.key,
+      required this.recipe,
+      required this.categoryId,
+      this.fromFavorites = false,
+      this.onFavoriteToggle});
 
   @override
   _RecipeCardState createState() => _RecipeCardState();
@@ -56,7 +61,12 @@ class _RecipeCardState extends State<RecipeCard> {
           onPressed: _toggleFavorite,
         ),
         onTap: () {
-          context.go('/recipe/${widget.recipe.idMeal}/${widget.categoryId}', extra: {'fromFavorites': widget.fromFavorites});        },
+          Navigator.pushNamed(
+            context,
+            '/recipe/${widget.recipe.idMeal}/${widget.categoryId}',
+            arguments: {'fromFavorites': widget.fromFavorites},
+          );
+        },
       ),
     );
   }
