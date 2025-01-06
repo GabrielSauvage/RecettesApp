@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp.router(
       routerConfig: _router,
-      title: 'Paradis des recettes',
+      title: 'Recipe paradise',
       theme: appTheme,
     );
   }
