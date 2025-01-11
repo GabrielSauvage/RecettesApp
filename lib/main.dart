@@ -19,6 +19,7 @@ class MyApp extends StatelessWidget {
       title: 'Recipe paradise',
       theme: appTheme,
       initialRoute: '/',
+      debugShowCheckedModeBanner: false,
       onGenerateRoute: (settings) {
         final Uri uri = Uri.parse(settings.name!);
         if (uri.pathSegments.length == 2 &&
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
         } else {
           return MaterialPageRoute(
             builder: (context) => Home(),
+            settings: RouteSettings(name: '/home'),
           );
         }
       },

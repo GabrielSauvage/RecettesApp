@@ -85,7 +85,7 @@ class _HomeViewState extends State<HomeView> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: showCategories
                         ? theme.colorScheme.primary
-                        : theme.colorScheme.secondary,
+                        : Colors.grey,
                   ),
                   child: Text(
                     'Categories',
@@ -106,7 +106,7 @@ class _HomeViewState extends State<HomeView> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: !showCategories
                         ? theme.colorScheme.primary
-                        : theme.colorScheme.secondary,
+                        : Colors.grey,
                   ),
                   child: Text(
                     'Countries',

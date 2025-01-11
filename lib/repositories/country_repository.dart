@@ -14,7 +14,7 @@ class CountryRepository {
 
       return countries.map((country) => Country.fromJson(country)).toList();
     } else {
-      throw Exception("Erreur lors du chargement des pays");
+      throw Exception("Error loading countries");
     }
   }
 }

@@ -12,9 +12,13 @@ class BottomNavBar extends StatefulWidget {
 class _BottomNavBarState extends State<BottomNavBar> {
   void _onItemTapped(int index) {
     if (index == 0) {
-      Navigator.pushNamed(context, '/');
+      if (ModalRoute.of(context)?.settings.name != '/') {
+        Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+      }
     } else if (index == 1) {
-      Navigator.pushNamed(context, '/favorites');
+      if (ModalRoute.of(context)?.settings.name != '/favorites') {
+        Navigator.pushNamedAndRemoveUntil(context, '/favorites', (route) => false);
+      }
     }
   }
 

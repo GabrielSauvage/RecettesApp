@@ -45,16 +45,12 @@ class _RecipeListViewState extends State<RecipeListView> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('${widget.id} recipes'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          color:
-              ColorScheme.fromSeed(seedColor: const Color(0xFFDDBFA9)).primary,
-          onPressed: () {
-            Navigator.pop(context);
-          },
+        iconTheme: IconThemeData(
+          color: theme.colorScheme.primary,
         ),
       ),
       body: Column(

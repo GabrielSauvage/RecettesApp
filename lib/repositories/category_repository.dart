@@ -14,7 +14,7 @@ class CategoryRepository {
 
       return categories.map((category) => Category.fromJson(category)).toList();
     } else {
-      throw Exception("Erreur lors du chargement des catégories");
+      throw Exception("Error loading categories");
     }
   }
 }
