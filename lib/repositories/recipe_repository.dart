@@ -44,19 +44,6 @@ class RecipeRepository {
     }
   }
 
-  Future<List<Recipe>> searchByIngredient(String ingredient) async {
-    final response = await http.get(Uri.parse('${_baseUrl}filter.php?i=$ingredient'));
-
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      final meals = data['meals'] as List<dynamic>;
-
-      return meals.map((meal) => Recipe.fromJson(meal)).toList();
-    } else {
-      throw Exception("Erreur lors du chargement des données");
-    }
-  }
-
   Future<List<Recipe>> fetchFavoriteRecipes() async {
     final prefs = await SharedPreferences.getInstance();
     final keys = prefs.getKeys();
