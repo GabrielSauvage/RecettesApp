@@ -3,7 +3,6 @@ import 'package:tp/ui/screens/favorites.dart';
 import 'package:tp/ui/screens/home.dart';
 import 'package:tp/ui/screens/recipe_detail.dart';
 import 'package:tp/ui/screens/recipe_list.dart';
-
 import 'theme.dart';
 
 void main() {
